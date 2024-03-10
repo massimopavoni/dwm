@@ -45,8 +45,8 @@ static const int lockfullscreen = 1; /* 1 will force focus on the fullscreen win
 static const Layout layouts[] = {
 	/* symbol     arrange function */
 	{ "[]=",      tile },    /* first entry is default */
-	{ "[M]",      monocle},
 	{ "><>",      NULL },    /* no layout function means floating behavior */
+	{ "[M]",      monocle},
 };
 
 /* key definitions */
@@ -100,6 +100,7 @@ static const Key keys[] = {
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
 	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
+	{ MODKEY|ControlMask,           XK_space,  focusmaster,    {0} },
 };
 
 /* button definitions */
