@@ -1,2 +1,2 @@
 # dwm
-Dwm fork
+dwm fork
