@@ -30,6 +30,15 @@ static const char *colors[][3]      = {
 	[SchemeInfoNorm]  = { col_gray3, col_gray1,  "#000000"  }, // infobar middle  unselected {text,background,not used but cannot be empty}
 };
 
+/* autostart */
+static const char *const autostart[] = {
+        "dunst", NULL,
+        "picom", NULL,
+	"numlockx", NULL,
+	"feh", "--bg-fill", "/home/damax/Pictures/Wallpapers/green_arch.png", NULL,
+        NULL /* terminate */
+};
+
 /* tagging */
 static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8" };
 
