@@ -32,8 +32,8 @@ static const char *colors[][3]      = {
 
 /* autostart */
 static const char *const autostart[] = {
-        "dunst", NULL,
-        "picom", NULL,
+	"dunst", NULL,
+	"picom", NULL,
 	"numlockx", NULL,
 	"feh", "--bg-fill", "/home/damax/Pictures/Wallpapers/green_arch.png", NULL,
         NULL /* terminate */
@@ -48,7 +48,7 @@ static const Rule rules[] = {
 	 *	WM_NAME(STRING) = title
 	 */
 	/* class      instance    title       tags mask     isfloating   monitor */
-	{ NULL,       NULL,       NULL,       0,            0,           -1 },
+	{  NULL,      NULL,       NULL,       0,            0,           -1 },
 };
 
 /* layout(s) */
@@ -124,10 +124,10 @@ static const Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
 	{ MODKEY|ControlMask,           XK_space,  focusmaster,    {0} },
 	{ 0,                XF86XK_AudioMute,      spawn,          {.v = mute_vol } },
-        { 0,         XF86XK_AudioLowerVolume,      spawn,          {.v = down_vol } },
-        { 0,         XF86XK_AudioRaiseVolume,      spawn,          {.v = up_vol } },
-        { 0,        XF86XK_MonBrightnessDown,      spawn,          {.v = dimmer } },
-        { 0,          XF86XK_MonBrightnessUp,      spawn,          {.v = brighter } },
+	{ 0,         XF86XK_AudioLowerVolume,      spawn,          {.v = down_vol } },
+	{ 0,         XF86XK_AudioRaiseVolume,      spawn,          {.v = up_vol } },
+	{ 0,        XF86XK_MonBrightnessDown,      spawn,          {.v = dimmer } },
+	{ 0,          XF86XK_MonBrightnessUp,      spawn,          {.v = brighter } },
 	{ METAKEY|ShiftMask,            XK_s,      spawn,          {.v = screenshot } },
 };
 
