@@ -52,6 +52,7 @@ static const Layout layouts[] = {
 
 /* key definitions */
 #define MODKEY Mod1Mask
+#define METAKEY Mod4Mask
 #define TAGKEYS(KEY,TAG) \
 	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
 	{ MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
@@ -70,6 +71,7 @@ static const char *down_vol[] = { "pactl", "set-sink-volume", "@DEFAULT_SINK@", 
 static const char *up_vol[]   = { "pactl", "set-sink-volume", "@DEFAULT_SINK@", "+5%", NULL };
 static const char *dimmer[]   = { "brightnessctl", "set", "5%-", NULL };
 static const char *brighter[] = { "brightnessctl", "set", "5%+", NULL };
+static const char *screenshot[] = { "flameshot", "gui", NULL };
 
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
@@ -112,6 +114,7 @@ static const Key keys[] = {
         { 0,         XF86XK_AudioRaiseVolume,      spawn,          {.v = up_vol } },
         { 0,        XF86XK_MonBrightnessDown,      spawn,          {.v = dimmer } },
         { 0,          XF86XK_MonBrightnessUp,      spawn,          {.v = brighter } },
+	{ METAKEY|ShiftMask,            XK_s,      spawn,          {.v = screenshot } },
 };
 
 /* button definitions */
