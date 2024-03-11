@@ -35,7 +35,7 @@ static const char *const autostart[] = {
 	"dunst", NULL,
 	"picom", NULL,
 	"numlockx", NULL,
-	"feh", "--bg-fill", "/home/damax/Pictures/Wallpapers/green_arch.png", NULL,
+	"/home/damax/.fehbg", NULL,
         NULL /* terminate */
 };
 
