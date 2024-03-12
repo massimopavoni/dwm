@@ -128,7 +128,6 @@ static const Key keys[] = {
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
 	{ MODKEY|ShiftMask,     XK_BackSpace,      quit,           {0} },
-	{ MODKEY|ControlMask,           XK_space,  focusmaster,    {0} },
 	{ 0,                XF86XK_AudioMute,      spawn,          {.v = mute_vol } },
 	{ 0,         XF86XK_AudioLowerVolume,      spawn,          {.v = down_vol } },
 	{ 0,         XF86XK_AudioRaiseVolume,      spawn,          {.v = up_vol } },
