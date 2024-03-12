@@ -47,16 +47,22 @@
 /* macros */
 #define BUTTONMASK              (ButtonPressMask|ButtonReleaseMask)
 #define CLEANMASK(mask)         (mask & ~(numlockmask|LockMask) & (ShiftMask|ControlMask|Mod1Mask|Mod2Mask|Mod3Mask|Mod4Mask|Mod5Mask))
+#define GETINC(X)               ((X) - 2000)
+#define INC(X)                  ((X) + 2000)
 #define INTERSECT(x,y,w,h,m)    (MAX(0, MIN((x)+(w),(m)->wx+(m)->ww) - MAX((x),(m)->wx)) \
                                * MAX(0, MIN((y)+(h),(m)->wy+(m)->wh) - MAX((y),(m)->wy)))
+#define ISINC(X)                ((X) > 1000 && (X) < 3000)
 #define ISVISIBLEONTAG(C, T)    ((C->tags & T))
 #define ISVISIBLE(C)            ISVISIBLEONTAG(C, C->mon->tagset[C->mon->seltags])
+#define PREVSEL                 3000
 #define LENGTH(X)               (sizeof X / sizeof X[0])
+#define MOD(N,M)                ((N)%(M) < 0 ? (N)%(M) + (M) : (N)%(M))
 #define MOUSEMASK               (BUTTONMASK|PointerMotionMask)
 #define WIDTH(X)                ((X)->w + 2 * (X)->bw)
 #define HEIGHT(X)               ((X)->h + 2 * (X)->bw)
 #define TAGMASK                 ((1 << LENGTH(tags)) - 1)
 #define TEXTW(X)                (drw_fontset_getwidth(drw, (X)) + lrpad)
+#define TRUNC(X,A,B)            (MAX((A), MIN((X), (B))))
 #define SYSTEM_TRAY_REQUEST_DOCK    0
 /* XEMBED messages */
 #define XEMBED_EMBEDDED_NOTIFY      0
@@ -143,7 +149,6 @@ struct Monitor {
 	Client *clients;
 	Client *sel;
 	Client *stack;
-	Client *tagmarked[32];
 	Monitor *next;
 	Window barwin;
 	const Layout *lt[2];
@@ -192,7 +197,6 @@ static void enternotify(XEvent *e);
 static void expose(XEvent *e);
 static void focus(Client *c);
 static void focusin(XEvent *e);
-static void focusmaster(const Arg *arg);
 static void focusmon(const Arg *arg);
 static void focusstack(const Arg *arg);
 static Atom getatomprop(Client *c, Atom prop);
@@ -215,6 +219,7 @@ static Client *nexttagged(Client *c);
 static Client *nexttiled(Client *c);
 static void pop(Client *c);
 static void propertynotify(XEvent *e);
+static void pushstack(const Arg *arg);
 static void quit(const Arg *arg);
 static Monitor *recttomon(int x, int y, int w, int h);
 static void removesystrayicon(Client *i);
@@ -239,6 +244,7 @@ static void seturgent(Client *c, int urg);
 static void showhide(Client *c);
 static int solitary(Client *c);
 static void spawn(const Arg *arg);
+static int stackpos(const Arg *arg);
 static Monitor *systraytomon(Monitor *m);
 static void tag(const Arg *arg);
 static void tagmon(const Arg *arg);
@@ -828,10 +834,6 @@ detach(Client *c)
 {
 	Client **tc;
 
-	for (int i = 1; i < LENGTH(tags); i++)
-		if (c == c->mon->tagmarked[i])
-			c->mon->tagmarked[i] = NULL;
-
 	for (tc = &c->mon->clients; *tc && *tc != c; tc = &(*tc)->next);
 	*tc = c->next;
 }
@@ -1005,34 +1007,6 @@ focusin(XEvent *e)
 }
 
 void
-focusmaster(const Arg *arg)
-{
-	Client *master;
-
-	if (selmon->nmaster > 1)
-		return;
-	if (!selmon->sel || (selmon->sel->isfullscreen && lockfullscreen))
-		return;
-
-	master = nexttiled(selmon->clients);
-
-	if (!master)
-		return;
-
-	int i;
-	for (i = 0; !(selmon->tagset[selmon->seltags] & 1 << i); i++);
-	i++;
-
-	if (selmon->sel == master) {
-		if (selmon->tagmarked[i] && ISVISIBLE(selmon->tagmarked[i]))
-			focus(selmon->tagmarked[i]);
-	} else {
-		selmon->tagmarked[i] = selmon->sel;
-		focus(master);
-	}
-}
-
-void
 focusmon(const Arg *arg)
 {
 	Monitor *m;
@@ -1050,27 +1024,16 @@ focusmon(const Arg *arg)
 void
 focusstack(const Arg *arg)
 {
-	Client *c = NULL, *i;
+	int i = stackpos(arg);
+	Client *c, *p;
 
-	if (!selmon->sel || (selmon->sel->isfullscreen && lockfullscreen))
+	if (i < 0)
 		return;
-	if (arg->i > 0) {
-		for (c = selmon->sel->next; c && !ISVISIBLE(c); c = c->next);
-		if (!c)
-			for (c = selmon->clients; c && !ISVISIBLE(c); c = c->next);
-	} else {
-		for (i = selmon->clients; i != selmon->sel; i = i->next)
-			if (ISVISIBLE(i))
-				c = i;
-		if (!c)
-			for (; i; i = i->next)
-				if (ISVISIBLE(i))
-					c = i;
-	}
-	if (c) {
-		focus(c);
-		restack(selmon);
-	}
+
+	for (p = NULL, c = selmon->clients; c && (i || !ISVISIBLE(c));
+			i -= ISVISIBLE(c) ? 1 : 0, p = c, c = c->next);
+	focus(c ? c : p);
+	restack(selmon);
 }
 
 Atom
@@ -1480,11 +1443,6 @@ nexttiled(Client *c)
 void
 pop(Client *c)
 {
-	int i;
-	for (i = 0; !(selmon->tagset[selmon->seltags] & 1 << i); i++);
-	i++;
-
-	c->mon->tagmarked[i] = nexttiled(c->mon->clients);
 	detach(c);
 	attach(c);
 	focus(c);
@@ -1537,6 +1495,29 @@ propertynotify(XEvent *e)
 		if (ev->atom == netatom[NetWMWindowType])
 			updatewindowtype(c);
 	}
+}
+
+void
+pushstack(const Arg *arg) {
+	int i = stackpos(arg);
+	Client *sel = selmon->sel, *c, *p;
+
+	if(i < 0)
+		return;
+	else if(i == 0) {
+		detach(sel);
+		attach(sel);
+	}
+	else {
+		for(p = NULL, c = selmon->clients; c; p = c, c = c->next)
+			if(!(i -= (ISVISIBLE(c) && c != sel)))
+				break;
+		c = c ? c : p;
+		detach(sel);
+		sel->next = c->next;
+		c->next = sel;
+	}
+	arrange(selmon);
 }
 
 void
@@ -2052,6 +2033,36 @@ setclienttagprop(Client *c)
 	long data[] = { (long) c->tags, (long) c->mon->num };
 	XChangeProperty(dpy, c->win, netatom[NetClientInfo], XA_CARDINAL, 32,
 			PropModeReplace, (unsigned char *) data, 2);
+}
+
+int
+stackpos(const Arg *arg) {
+	int n, i;
+	Client *c, *l;
+
+	if (!selmon->clients)
+		return -1;
+
+	if (arg->i == PREVSEL) {
+		for (l = selmon->stack; l && (!ISVISIBLE(l) || l == selmon->sel); l = l->snext);
+		if (!l)
+			return -1;
+		for (i = 0, c = selmon->clients; c != l; i += ISVISIBLE(c) ? 1 : 0, c = c->next);
+		return i;
+	}
+	else if (ISINC(arg->i)) {
+		if (!selmon->sel)
+			return -1;
+		for (i = 0, c = selmon->clients; c != selmon->sel; i += ISVISIBLE(c) ? 1 : 0, c = c->next);
+		for (n = i; c; n += ISVISIBLE(c) ? 1 : 0, c = c->next);
+		return MOD(i + GETINC(arg->i), n);
+	}
+	else if (arg->i < 0) {
+		for (i = 0, c = selmon->clients; c; i += ISVISIBLE(c) ? 1 : 0, c = c->next);
+		return MAX(i + arg->i, 0);
+	}
+	else
+		return arg->i;
 }
 
 void
