@@ -32,9 +32,10 @@ static const char *colors[][3]      = {
 
 /* autostart */
 static const char *const autostart[] = {
-	"dunst", NULL,
 	"picom", NULL,
+	"dunst", NULL,
 	"numlockx", NULL,
+	"xss-lock", "--", "slock", NULL,
 	"/home/damax/.fehbg", NULL,
         NULL /* terminate */
 };
@@ -88,6 +89,7 @@ static const Layout layouts[] = {
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char *termcmd[]  = { "alacritty", NULL };
+static const char *lock_screen[] = { "slock", NULL };
 static const char *mute_vol[] = { "pactl", "set-sink-mute", "@DEFAULT_SINK@", "toggle", NULL };
 static const char *down_vol[] = { "pactl", "set-sink-volume", "@DEFAULT_SINK@", "-5%", NULL };
 static const char *up_vol[]   = { "pactl", "set-sink-volume", "@DEFAULT_SINK@", "+5%", NULL };
@@ -130,6 +132,7 @@ static const Key keys[] = {
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
 	{ MODKEY|ShiftMask,     XK_BackSpace,      quit,           {0} },
+	{ MODKEY|ControlMask|ShiftMask, XK_l,      spawn,          {.v = lock_screen } },
 	{ 0,                XF86XK_AudioMute,      spawn,          {.v = mute_vol } },
 	{ 0,         XF86XK_AudioLowerVolume,      spawn,          {.v = down_vol } },
 	{ 0,         XF86XK_AudioRaiseVolume,      spawn,          {.v = up_vol } },
