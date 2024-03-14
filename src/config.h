@@ -90,12 +90,18 @@ static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() 
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char *termcmd[]  = { "alacritty", NULL };
 static const char *slockcmd[] = { "slock", NULL };
-static const char *mute_vol[] = { "pactl", "set-sink-mute", "@DEFAULT_SINK@", "toggle", NULL };
-static const char *down_vol[] = { "pactl", "set-sink-volume", "@DEFAULT_SINK@", "-5%", NULL };
-static const char *up_vol[]   = { "pactl", "set-sink-volume", "@DEFAULT_SINK@", "+5%", NULL };
-static const char *dimmer[]   = { "brightnessctl", "set", "5%-", NULL };
-static const char *brighter[] = { "brightnessctl", "set", "5%+", NULL };
-static const char *screenshot[] = { "flameshot", "gui", NULL };
+/* volume control */
+static const char *volmutecmd[] = { "pactl", "set-sink-mute", "@DEFAULT_SINK@", "toggle", NULL };
+static const char *voldowncmd[] = { "pactl", "set-sink-volume", "@DEFAULT_SINK@", "-5%", NULL };
+static const char *volupcmd[]   = { "pactl", "set-sink-volume", "@DEFAULT_SINK@", "+5%", NULL };
+/* media control */
+static const char *medplaypausecmd[] = { "playerctl", "play-pause", NULL };
+static const char *mednextcmd[] = { "playerctl", "next", NULL };
+static const char *medprevcmd[] = { "playerctl", "previous", NULL };
+/* brightness control */
+static const char *dimmercmd[]   = { "brightnessctl", "set", "5%-", NULL };
+static const char *brightercmd[] = { "brightnessctl", "set", "5%+", NULL };
+static const char *screenshotcmd[] = { "flameshot", "gui", NULL };
 
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
@@ -133,12 +139,15 @@ static const Key keys[] = {
 	TAGKEYS(                        XK_9,                      8)
 	{ MODKEY|ShiftMask,     XK_BackSpace,      quit,           {0} },
 	{ MODKEY|ControlMask|ShiftMask, XK_l,      spawn,          {.v = slockcmd } },
-	{ 0,                XF86XK_AudioMute,      spawn,          {.v = mute_vol } },
-	{ 0,         XF86XK_AudioLowerVolume,      spawn,          {.v = down_vol } },
-	{ 0,         XF86XK_AudioRaiseVolume,      spawn,          {.v = up_vol } },
-	{ 0,        XF86XK_MonBrightnessDown,      spawn,          {.v = dimmer } },
-	{ 0,          XF86XK_MonBrightnessUp,      spawn,          {.v = brighter } },
-	{ METAKEY|ShiftMask,            XK_s,      spawn,          {.v = screenshot } },
+	{ 0,                XF86XK_AudioMute,      spawn,          {.v = volmutecmd } },
+	{ 0,         XF86XK_AudioLowerVolume,      spawn,          {.v = voldowncmd } },
+	{ 0,         XF86XK_AudioRaiseVolume,      spawn,          {.v = volupcmd } },
+	{ 0,                XF86XK_AudioPlay,      spawn,          {.v = medplaypausecmd } },
+	{ 0,                XF86XK_AudioNext,      spawn,          {.v = mednextcmd } },
+	{ 0,                XF86XK_AudioPrev,      spawn,          {.v = medprevcmd } },
+	{ 0,        XF86XK_MonBrightnessDown,      spawn,          {.v = dimmercmd } },
+	{ 0,          XF86XK_MonBrightnessUp,      spawn,          {.v = brightercmd } },
+	{ METAKEY|ShiftMask,            XK_s,      spawn,          {.v = screenshotcmd } },
 };
 
 /* button definitions */
