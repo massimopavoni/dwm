@@ -18,7 +18,7 @@ static const char *fonts[]          = { "FiraCode:size=13", "SymbolsNerdFont:siz
 static const char dmenufont[]       = "FiraCode:size=13";
 static const char col_gray1[]       = "#222222";
 static const char col_gray2[]       = "#555555";
-static const char col_gray3[]       = "#cccccc";
+static const char col_gray3[]       = "#dddddd";
 static const char col_gray4[]       = "#ffffff";
 static const char col_green[]       = "#004400";
 static const char col_green_sel[]   = "#006600";
