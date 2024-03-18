@@ -14,8 +14,8 @@ static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
 static const int horizpadbar        = 2;        /* horizontal padding for statusbar */
 static const int vertpadbar         = 4;        /* vertical padding for statusbar */
-static const char *fonts[]          = { "NotoSansMono:size=12", "SymbolsNerdFont:size=13" };
-static const char dmenufont[]       = "NotoSansMono:size=12";
+static const char *fonts[]          = { "FiraCode:size=13", "SymbolsNerdFont:size=13" };
+static const char dmenufont[]       = "FiraCode:size=13";
 static const char col_gray1[]       = "#222222";
 static const char col_gray2[]       = "#555555";
 static const char col_gray3[]       = "#cccccc";
