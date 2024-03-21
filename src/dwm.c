@@ -1992,6 +1992,7 @@ void
 setup(void)
 {
 	int i;
+	pid_t pid;
 	XSetWindowAttributes wa;
 	Atom utf8string;
 	struct sigaction sa;
@@ -2002,7 +2003,6 @@ setup(void)
 	sa.sa_handler = SIG_IGN;
 	sigaction(SIGCHLD, &sa, NULL);
 
-	pid_t pid;
 	while ((pid = waitpid(-1, NULL, WNOHANG)) > 0) {
 		pid_t *p, *lim;
 
