@@ -15,7 +15,6 @@ static const int topbar             = 1;        /* 0 means bottom bar */
 static const int horizpadbar        = 2;        /* horizontal padding for statusbar */
 static const int vertpadbar         = 4;        /* vertical padding for statusbar */
 static const char *fonts[]          = { "FiraCode:size=13", "SymbolsNerdFontMono:size=13" };
-static const char dmenufont[]       = "FiraCode:size=13";
 static const char col_gray1[]       = "#222222";
 static const char col_gray2[]       = "#555555";
 static const char col_gray3[]       = "#dddddd";
@@ -93,7 +92,7 @@ static const Layout layouts[] = {
 /* helper for spawning shell commands in the pre dwm-5.0 fashion */
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 
-/* commands */
+/* important commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, NULL };
 static const char *termcmd[]  = { "alacritty", NULL };
@@ -104,6 +103,7 @@ static const char *mednextcmd[] = { "playerctl", "next", NULL };
 static const char *medprevcmd[] = { "playerctl", "previous", NULL };
 /* other */
 static const char *screenshotcmd[] = { "flameshot", "gui", NULL };
+static const char *qalccmd[] = { "dmenu", "-C", "-l", "1", NULL };
 
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
@@ -150,6 +150,7 @@ static const Key keys[] = {
 	{ 0,        XF86XK_MonBrightnessDown,      spawn,          SHCMD("~/.local/bin/dunst-brightness 5%-") },
 	{ 0,          XF86XK_MonBrightnessUp,      spawn,          SHCMD("~/.local/bin/dunst-brightness 5%+") },
 	{ METAKEY|ShiftMask,            XK_s,      spawn,          {.v = screenshotcmd } },
+	{ MODKEY|ShiftMask,             XK_p,      spawn,          {.v = qalccmd } },
 };
 
 /* button definitions */
