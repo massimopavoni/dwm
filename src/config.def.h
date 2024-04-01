@@ -73,8 +73,7 @@ static const Layout layouts[] = {
 };
 
 /* key definitions */
-#define MODKEY Mod1Mask
-#define METAKEY Mod4Mask
+#define MODKEY Mod4Mask
 #define TAGKEYS(KEY,TAG) \
 	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
 	{ MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
@@ -151,7 +150,7 @@ static const Key keys[] = {
 	{ 0,                            XF86XK_AudioPrev,         spawn,          {.v = medprevcmd } },
 	{ 0,                            XF86XK_MonBrightnessDown, spawn,          SHCMD("~/.local/bin/dunst-brightness 5%-") },
 	{ 0,                            XF86XK_MonBrightnessUp,   spawn,          SHCMD("~/.local/bin/dunst-brightness 5%+") },
-	{ METAKEY|ShiftMask,            XK_s,                     spawn,          {.v = screenshotcmd } },
+	{ MODKEY|ShiftMask,             XK_s,                     spawn,          {.v = screenshotcmd } },
 	{ MODKEY|ShiftMask,             XK_p,                     spawn,          {.v = qalccmd } },
 };
 
