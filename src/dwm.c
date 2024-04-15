@@ -1563,7 +1563,7 @@ propertynotify(XEvent *e)
 		updatesystray();
 	}
 
-    if ((ev->window == root) && (ev->atom == XA_WM_NAME))
+	if ((ev->window == root) && (ev->atom == XA_WM_NAME))
 		updatestatus();
 	else if (ev->state == PropertyDelete)
 		return; /* ignore */
@@ -2125,8 +2125,6 @@ spawn(const Arg *arg)
 {
 	struct sigaction sa;
 
-	if (arg->v == dmenucmd)
-		dmenumon[0] = '0' + selmon->num;
 	if (fork() == 0) {
 		if (dpy)
 			close(ConnectionNumber(dpy));

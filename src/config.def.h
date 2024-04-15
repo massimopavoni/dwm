@@ -1,5 +1,4 @@
 /* See LICENSE file for copyright and license details. */
-#include <X11/XF86keysym.h>
 
 /* appearance */
 static const unsigned int borderpx  = 1;        /* border pixel of windows */
@@ -39,6 +38,7 @@ static const char *const autostart[] = {
 	"xss-lock", "--", "slock", NULL,
 	"slstatus", NULL,
 	"setxkbmap", "-layout", "us,it", "-option", "grp:alt_space_toggle", NULL,
+	"sxhkd", "-t", "1", NULL,
 	"numlockx", NULL,
 	"/bin/sh", "-c", "~/.fehbg", NULL,
         NULL /* terminate */
@@ -92,22 +92,10 @@ static const Layout layouts[] = {
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 
 /* important commands */
-static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
-static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, NULL };
 static const char *termcmd[]  = { "alacritty", NULL };
-static const char *slockcmd[] = { "slock", NULL };
-static const char *powermenucmd[] = { "dmenu_power", "-m", dmenumon, NULL };
-/* media control */
-static const char *medplaypausecmd[] = { "playerctl", "play-pause", NULL };
-static const char *mednextcmd[] = { "playerctl", "next", NULL };
-static const char *medprevcmd[] = { "playerctl", "previous", NULL };
-/* other */
-static const char *screenshotcmd[] = { "flameshot", "gui", NULL };
-static const char *qalccmd[] = { "dmenu", "-m", dmenumon, "-C", "-l", "1", NULL };
 
 static const Key keys[] = {
 	/* modifier                     key                       function        argument */
-	{ MODKEY,                       XK_p,                     spawn,          {.v = dmenucmd } },
 	{ MODKEY|ShiftMask,             XK_Return,                spawn,          {.v = termcmd } },
 	{ MODKEY,                       XK_b,                     togglebar,      {0} },
 	STACKKEYS(MODKEY,                                         focus)
@@ -140,18 +128,6 @@ static const Key keys[] = {
 	TAGKEYS(                        XK_8,                                     7)
 	TAGKEYS(                        XK_9,                                     8)
 	{ MODKEY|ShiftMask,             XK_BackSpace,             quit,           {0} },
-	{ MODKEY|ControlMask|ShiftMask, XK_l,                     spawn,          {.v = slockcmd } },
-	{ MODKEY|ControlMask|ShiftMask, XK_BackSpace,             spawn,          {.v = powermenucmd } },
-	{ 0,                            XF86XK_AudioMute,         spawn,          SHCMD("~/.local/bin/dunst-volume toggle") },
-	{ 0,                            XF86XK_AudioLowerVolume,  spawn,          SHCMD("~/.local/bin/dunst-volume -5%") },
-	{ 0,                            XF86XK_AudioRaiseVolume,  spawn,          SHCMD("~/.local/bin/dunst-volume +5%") },
-	{ 0,                            XF86XK_AudioPlay,         spawn,          {.v = medplaypausecmd } },
-	{ 0,                            XF86XK_AudioNext,         spawn,          {.v = mednextcmd } },
-	{ 0,                            XF86XK_AudioPrev,         spawn,          {.v = medprevcmd } },
-	{ 0,                            XF86XK_MonBrightnessDown, spawn,          SHCMD("~/.local/bin/dunst-brightness 5%-") },
-	{ 0,                            XF86XK_MonBrightnessUp,   spawn,          SHCMD("~/.local/bin/dunst-brightness 5%+") },
-	{ MODKEY|ShiftMask,             XK_s,                     spawn,          {.v = screenshotcmd } },
-	{ MODKEY|ShiftMask,             XK_p,                     spawn,          {.v = qalccmd } },
 };
 
 /* button definitions */
