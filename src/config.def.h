@@ -37,7 +37,6 @@ static const char *const autostart[] = {
 	"dunst", NULL,
 	"xss-lock", "--", "slock", NULL,
 	"slstatus", NULL,
-	"keyboard-layout", NULL,
 	"sxhkd", "-t", "1", NULL,
 	"numlockx", NULL,
 	"/bin/sh", "-c", "~/.fehbg", NULL,
