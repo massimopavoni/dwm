@@ -39,6 +39,7 @@ static const char *const autostart[] = {
 	"slstatus", NULL,
 	"sxhkd", "-t", "1", NULL,
 	"numlockx", NULL,
+	"fcitx5", "-d", NULL,
 	"/bin/sh", "-c", "~/.fehbg", NULL,
         NULL /* terminate */
 };
