@@ -1995,7 +1995,7 @@ setup(void)
 	sa.sa_handler = SIG_IGN;
 	sigaction(SIGCHLD, &sa, NULL);
 
-	while ((pid = waitpid(-1, NULL, WNOHANG)) > 0) {
+	while (0 < (pid = waitpid(-1, NULL, WNOHANG))) {
 		pid_t *p, *lim;
 
 		if (!(p = autostart_pids))
